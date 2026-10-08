@@ -16,31 +16,42 @@ Tên miền do Bộ Nông nghiệp và Môi trường đăng ký và bàn giao. 
 
 **Context Diagram:**
 
+Bốn actor dưới đây trùng với mục 2.2. Khách xem và người bình chọn chỉ dùng website công khai. Admin và ban tổ chức chỉ dùng CMS. Facebook, Google, Zalo và CDN là hệ thống ngoài.
+
 ```mermaid
 graph TB
-    subgraph External["Bên ngoài"]
-        Public[Cong chung]
-        Organizer[Ban to chuc]
-        Facebook[Facebook OAuth va chia se]
-        Google[Google OAuth]
-        Zalo[Zalo chia se link]
-        CDN[CDN anh va video]
+    subgraph Actors["Actor"]
+        Guest["Khách xem"]
+        Voter["Người bình chọn"]
+        Org["Ban tổ chức"]
+        Adm["Admin"]
     end
-    subgraph System["Website hoi thi"]
-        Web[Website cong khai]
-        Admin[CMS dang nhap, dang bai, noi dung tinh, tai khoan]
-        Store[Kho bai, phieu, file]
+    subgraph System["Website hội thi"]
+        Web["Website công khai"]
+        CMS["CMS"]
+        Store["Kho bài, phiếu, file"]
     end
-    Public --> Web
-    Public --> CDN
-    Organizer --> Admin
+    subgraph External["Hệ thống ngoài"]
+        Facebook["Facebook OAuth và chia sẻ"]
+        Google["Google OAuth"]
+        Zalo["Zalo chia sẻ link"]
+        CDN["CDN ảnh và video"]
+    end
+    Guest -->|"Xem nội dung mùa hiện tại"| Web
+    Guest -->|"Tải ảnh và video đã công khai"| CDN
+    Voter -->|"Đăng nhập rồi ghi phiếu"| Web
+    Voter -->|"Tải ảnh và video đã công khai"| CDN
+    Org -->|"Nội dung tĩnh, mùa giải, bài đăng"| CMS
+    Adm -->|"Tạo và xóa tài khoản ban tổ chức"| CMS
+    Web --> Store
     Web --> Facebook
     Web --> Google
     Web --> Zalo
-    Web --> Store
-    Admin --> Store
-    Store --> CDN
+    CMS --> Store
+    Store -->|"Phát bản đã công khai"| CDN
 ```
+
+Admin trên sơ đồ là giả định ASM-09: một tài khoản được bàn giao, dùng để tạo và xóa tài khoản ban tổ chức. Bài đăng của ban tổ chức vẫn chờ chốt spec (ASM-01).
 
 
 
